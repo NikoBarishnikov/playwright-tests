@@ -12,8 +12,39 @@ export default defineConfig({
     video: 'retain-on-failure',
   },
   projects: [
-    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
-    { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
-    // WebKit на Mac13 не поддерживается, можно пропустить
+    {
+      name: 'chromium',
+      use: {
+        headless: false,
+        viewport: null,
+        launchOptions: {
+          args: ['--start-maximized'],
+        },
+      },
+    },
+    {
+      name: 'firefox',
+      use: {
+        headless: false,
+        viewport: null,
+        launchOptions: {
+          args: ['--start-maximized'],
+        },
+      },
+    },
+    {
+      name: 'chrome',
+      use: {
+        channel: 'chrome',
+        headless: false,
+        viewport: null,
+        launchOptions: {
+          args: ['--start-maximized'],
+        },
+      },
+    },
   ],
+
+
+
 });
