@@ -2,13 +2,13 @@ import { test, expect } from '@playwright/test';
 import { SearchPage } from '../pages/searchPage';
 
 test.describe('Search Map Tests', () => {
-  test('Search for Berlin groups', async ({ page }) => {
+  test('Search for Dresden groups', async ({ page }) => {
     const searchPage = new SearchPage(page);
 
     // Navigate to the page
     await page.goto('https://gruppenplatz.healthycloud.de/HC_GP_Public_Pages/');
 
-    await searchPage.wait(15000); 
+    //await searchPage.wait(10000); 
 
     // Accept cookies
     await searchPage.acceptCookies();

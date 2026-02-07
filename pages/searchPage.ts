@@ -20,74 +20,70 @@ export class SearchPage {
   // Accept cookies if the banner is visible
   async acceptCookies() {
     const acceptButton = this.page.locator('#accept');
+    const banner = this.page.locator('#uc-main-dialog');
   
     try {
-      await acceptButton.waitFor({ state: 'visible', timeout: 5000 });
+      // Wait up to 10 seconds for the accept button to appear
+      await acceptButton.waitFor({ state: 'visible', timeout: 10000 });
+  
+      // Click safely even if partially hidden
       await acceptButton.click({ force: true });
-      await this.page.waitForSelector('#uc-main-dialog', { state: 'detached', timeout: 5000 });
-    } catch (e) {
+  
+      // Wait for banner to disappear (hidden or detached)
+      try {
+        await banner.waitFor({ state: 'hidden', timeout: 5000 });
+      } catch {
+        // If banner already gone, continue
+      }
+  
+    } catch {
       console.log('Cookies banner not found or already accepted');
     }
   }
   
   // Expand the "More Filters" section if visible
   async expandMoreFilters() {
-    if (await this.mehrFilterButton.isVisible()) {
-      await this.mehrFilterButton.scrollIntoViewIfNeeded();
-      await this.mehrFilterButton.click();
-      await this.page.waitForTimeout(300);
-    }
+    await this.mehrFilterButton.click();
+  
+    await this.page
+      .locator('label:text-is("Format der Gruppe")')
+      .waitFor({ state: 'visible', timeout: 10000 });
   }
 
   // Select a group format from the dropdown
   async selectGroupFormat(format: string) {
-    await this.groupFormatDropdown.scrollIntoViewIfNeeded();
     await this.groupFormatDropdown.click();
 
-    const option = this.page.locator(`.dropdown-popup-row span:text-is("${format}")`);
+    const option = this.page
+      .locator('[id$="OptionsContainer"]:visible')
+      .getByText(format, { exact: true });
+  
     await option.waitFor({ state: 'visible', timeout: 5000 });
-
-    // Ensure the option is visible and has non-zero size
-    await option.evaluate(el => {
-      const rect = el.getBoundingClientRect();
-      if (rect.width === 0 || rect.height === 0) {
-        throw new Error(`Option "${format}" is invisible or has zero size`);
-      }
-    });
-
-    await option.scrollIntoViewIfNeeded();
-    await option.click({ force: true });
-    await this.page.waitForTimeout(2000);
+    await option.click()
   }
 
-  // Enter city and select from autocomplete by exact match
   async searchCityExact(city: string) {
-    // Fill the input
     await this.searchInput.fill(city);
-
-    // Wait for the autocomplete list to appear
+  
     const options = this.page.locator('#awesomplete_list_1 li');
-    await options.first().waitFor({ state: 'visible', timeout: 5000 });
-
+    await options.first().waitFor({ state: 'attached', timeout: 5000 });
+  
     const count = await options.count();
     let found = false;
-
+  
     for (let i = 0; i < count; i++) {
       const option = options.nth(i);
-      const text = (await option.innerText()).trim(); // Get text without spaces
-      if (text === city) { // exact match
-        await option.click();
+      const text = (await option.innerText()).trim();
+      if (text === city) {
+        await option.click({ force: true }); 
         found = true;
         break;
       }
     }
-
+  
     if (!found) {
       console.log(`City "${city}" not found as exact match in autocomplete list.`);
     }
-
-    // Pause to allow any animations to complete
-    await this.page.waitForTimeout(200);
   }
 
   // Click the search button
