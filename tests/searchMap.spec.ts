@@ -14,7 +14,7 @@ test.describe('Search Map Tests', () => {
     await searchPage.acceptCookies();
 
     // Enter the city
-    await searchPage.searchCityExact('Dresden');
+    await searchPage.searchCityExact('Berlin');
 
     // Expand additional filters
     await searchPage.expandMoreFilters();
@@ -29,9 +29,10 @@ test.describe('Search Map Tests', () => {
     const count = await searchPage.getResultsCount();
     expect(count).toBeGreaterThan(0);
 
+    await searchPage.logAllResultsText();
+
     // Check the text of the first result
-    const firstText = await searchPage.firstResultContains('Dresden');
-    expect(firstText).toContain('Dresden');
+    await searchPage.expectFirstResultToContain('Berlin');
   });
 });
 

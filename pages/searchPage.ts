@@ -1,4 +1,4 @@
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator, expect } from '@playwright/test';
 
 export class SearchPage {
   readonly page: Page;
@@ -31,7 +31,7 @@ export class SearchPage {
   
       // Wait for banner to disappear (hidden or detached)
       try {
-        await banner.waitFor({ state: 'hidden', timeout: 5000 });
+        await banner.waitFor({ state: 'hidden', timeout: 10000 });
       } catch {
         // If banner already gone, continue
       }
@@ -58,15 +58,17 @@ export class SearchPage {
       .locator('[id$="OptionsContainer"]:visible')
       .getByText(format, { exact: true });
   
-    await option.waitFor({ state: 'visible', timeout: 5000 });
+    await option.waitFor({ state: 'visible', timeout: 10000 });
     await option.click()
   }
 
   async searchCityExact(city: string) {
+    await this.searchInput.waitFor({ state: 'visible', timeout: 15000 });
+    await this.searchInput.click();
     await this.searchInput.fill(city);
   
     const options = this.page.locator('#awesomplete_list_1 li');
-    await options.first().waitFor({ state: 'attached', timeout: 5000 });
+    await options.first().waitFor({ state: 'visible', timeout: 15000 });
   
     const count = await options.count();
     let found = false;
@@ -75,14 +77,14 @@ export class SearchPage {
       const option = options.nth(i);
       const text = (await option.innerText()).trim();
       if (text === city) {
-        await option.click({ force: true }); 
+        await option.click({ force: true });
         found = true;
         break;
       }
     }
   
     if (!found) {
-      console.log(`City "${city}" not found as exact match in autocomplete list.`);
+      throw new Error(`City "${city}" not found in autocomplete list.`);
     }
   }
 
@@ -103,13 +105,28 @@ export class SearchPage {
   }
 
   // Get text content of the first result
-  async firstResultContains(text: string) {
-    return await this.mapListItems.first().textContent();
+  async expectFirstResultToContain(expectedText: string) {
+    await expect(this.mapListItems.first()).toContainText(expectedText);
   }
 
   // Wait for the specified time (ms)
   async wait(ms: number) {
     await this.page.waitForTimeout(ms);
   }
+
+  
+  // Log text of all map list items
+  async logAllResultsText() {
+  const count = await this.mapListItems.count();
+  console.log(`Found ${count} map list items:`);
+
+  for (let i = 0; i < count; i++) {
+    const text = (await this.mapListItems.nth(i).innerText()).trim();
+    console.log(`Item ${i + 1}: ${text}`);
+  }
+}
+
+  
+
 }
 
