@@ -16,11 +16,13 @@ test.describe('Search Map Tests', () => {
     // Enter the city
     await searchPage.searchCityExact('Berlin');
 
+    await searchPage.expandFilters();
+
     // Expand additional filters
-    await searchPage.expandMoreFilters();
+    //await searchPage.expandMoreFilters();
 
     // Select the group format
-    await searchPage.selectGroupFormat('Vor-Ort'); // or 'Online'
+    //await searchPage.selectGroupFormat('Vor-Ort'); // or 'Online'
 
     // Wait for results to appear on the map
     await searchPage.waitForResults();

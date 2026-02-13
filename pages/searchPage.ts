@@ -6,6 +6,8 @@ export class SearchPage {
   readonly mapListItems: Locator;
   readonly searchInput: Locator;
   readonly mehrFilterButton: Locator;
+  readonly filterButton: Locator;
+  
   readonly searchButton: Locator;
 
   constructor(page: Page) {
@@ -14,7 +16,9 @@ export class SearchPage {
     this.mapListItems = page.locator('.map-list-item');
     this.searchInput = page.locator('#b4-b2-b1-Input_SearchText');
     this.mehrFilterButton = page.locator('div:text-is("Mehr Filter anzeigen")');
+    this.filterButton = page.getByText('Filter', { exact: true }).first();
     this.searchButton = page.locator('#b4-b2-b1-Button_Search'); 
+    
   }
 
   // Accept cookies if the banner is visible
@@ -49,6 +53,17 @@ export class SearchPage {
       .locator('label:text-is("Format der Gruppe")')
       .waitFor({ state: 'visible', timeout: 10000 });
   }
+
+  // Expand the "Filters" section if visible
+  async expandFilters() {
+    const filterButton = this.page.getByText('Filter', { exact: true });
+    const iconDown = this.page.locator('i.fa-angle-down');
+  
+    if (await iconDown.isVisible()) {
+      await filterButton.click();
+    }
+  }
+  
 
   // Select a group format from the dropdown
   async selectGroupFormat(format: string) {
