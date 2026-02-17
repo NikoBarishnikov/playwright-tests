@@ -1,6 +1,6 @@
 name: Playwright Tests
 
-# Запускать при пуше в main/develop и на pull request
+
 on:
   push:
     branches: [ main, develop ]
@@ -11,29 +11,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Клонируем репозиторий
+      
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Устанавливаем Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      # 3. Устанавливаем зависимости проекта
       - name: Install dependencies
         run: npm ci
-
-      # 4. Устанавливаем браузеры для Playwright
+        
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
-      # 5. Запуск тестов
       - name: Run Playwright tests
         run: npx playwright test
 
-      # 6. Сохраняем HTML-отчёт как артефак
       - name: Upload Playwright Report
         if: always()
         uses: actions/upload-artifact@v4
