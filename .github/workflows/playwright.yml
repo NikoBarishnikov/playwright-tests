@@ -5,8 +5,7 @@ on:
   push:
     branches: [ main, develop ]
   pull_request:
-  schedule:
-    - cron: "35 13 * * *"
+  
 
 jobs:
   playwright:
