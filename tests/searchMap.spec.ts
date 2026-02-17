@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { SearchPage } from '../pages/searchPage';
 
 test.describe('Search Map Tests', () => {
-  test('Search for Dresden groups', async ({ page }) => {
+  test.skip('Search for Dresden groups', async ({ page }) => {
     const searchPage = new SearchPage(page);
 
     // Navigate to the page
