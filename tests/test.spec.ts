@@ -18,11 +18,13 @@ test.describe('Search Tests', () => {
 
 
 
- test('test', async ({ page }) => {
+ test.only('test', async ({ page }) => {
   await page.goto('https://gruppenplatz.healthycloud.de/HC_GP_Public_Pages/');
   await page.getByRole('button', { name: 'Accept All' }).click({ timeout: 10000, force: true });
   await page.getByRole('combobox', { name: 'Bitte Ort oder Postleitzahl' }).click();
   await page.getByRole('combobox', { name: 'Bitte Ort oder Postleitzahl' }).fill('Dresden');
   await page.getByRole('button', { name: 'Gruppen suchen' }).click();
+  await page.getByRole('button', { name: 'go to next page' }).click();
+  await expect(page.locator('#MapComponent')).toContainText('Dresden');
 });
 });
