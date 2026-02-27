@@ -8,7 +8,6 @@ test.describe('Search Map Tests', () => {
     // Navigate to the page
     await page.goto('https://gruppenplatz.healthycloud.de/HC_GP_Public_Pages/');
 
-    //await searchPage.wait(10000); 
 
     // Accept cookies
     await searchPage.acceptCookies();
@@ -17,12 +16,6 @@ test.describe('Search Map Tests', () => {
     await searchPage.searchCityExact('Berlin');
 
     await searchPage.expandFilters();
-
-    // Expand additional filters
-    //await searchPage.expandMoreFilters();
-
-    // Select the group format
-    //await searchPage.selectGroupFormat('Vor-Ort'); // or 'Online'
 
     // Wait for results to appear on the map
     await searchPage.waitForResults();

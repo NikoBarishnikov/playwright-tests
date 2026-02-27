@@ -18,7 +18,7 @@ test.describe('Search Tests', () => {
 
 
 
- test.only('test', async ({ page }) => {
+ test('test', async ({ page }) => {
   await page.goto('https://gruppenplatz.healthycloud.de/HC_GP_Public_Pages/');
   await page.getByRole('button', { name: 'Accept All' }).click({ timeout: 10000, force: true });
   await page.getByRole('combobox', { name: 'Bitte Ort oder Postleitzahl' }).click();
