@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { SearchPage } from '../pages/searchPage';
+import { SearchPage } from '../pages/ SearchPage';
 
 test.describe('Search Map Tests', () => {
   test.skip('Search for Dresden groups', async ({ page }) => {
