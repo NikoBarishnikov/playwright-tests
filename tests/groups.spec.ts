@@ -1,7 +1,7 @@
 import { test } from '@playwright/test';
 import { GroupsPage } from '../pages/GroupsPage';
 
-test.only('Search Dresden and navigate to next page', async ({ page }) => {
+test('Search Dresden and navigate to next page', async ({ page }) => {
   const groupsPage = new GroupsPage(page);
 
   await groupsPage.goto();
